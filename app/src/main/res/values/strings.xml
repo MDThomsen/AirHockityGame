@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">AirHockityGame</string>
-
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <color name="green">#A9F5A9</color>
 </resources>
