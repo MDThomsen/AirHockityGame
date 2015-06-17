@@ -12,7 +12,7 @@
         android:weightSum="1"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
-        android:background="@color/green">
+        android:background="#A9F5A9">
 
         <ImageView
             android:layout_width="377dp"
