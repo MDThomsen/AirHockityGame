@@ -17,6 +17,10 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".Game"
+            android:label="@string/gameClass"></activity>
+
+        <activity
             android:name=".Settings"
             android:label="@string/title_activity_settings" >
         </activity>

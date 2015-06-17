@@ -26,8 +26,8 @@ public class MainActivity extends Activity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent quickGame = new Intent(MainActivity.this,Game.class);
-                //startActivity(quickGame);
+                Intent quickGame = new Intent(MainActivity.this,Game.class);
+                startActivity(quickGame);
             }
         });
 
