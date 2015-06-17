@@ -7,7 +7,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.lang.reflect.Array;
 
@@ -35,6 +37,14 @@ public class Game extends Activity{
 
         // Set up user interface
         mFrame = (RelativeLayout) findViewById(R.id.frame);
+          Bundle input = getIntent().getExtras();
+        if(input != null){
+            int t = input.getInt("points");
+            String k = Integer.toString(t);
+            Toast lol = Toast.makeText(getApplicationContext(), t, Toast.LENGTH_LONG);
+            lol.show();
+        }
+
 
         players = new Player[2];
         mBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.player1);

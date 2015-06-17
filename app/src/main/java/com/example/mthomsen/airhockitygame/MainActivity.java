@@ -13,10 +13,16 @@ import android.widget.Button;
 
 public class MainActivity extends Activity {
 
+    private int points = 3;
+    static final int SETTINGS_REQUEST = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+
 
         final Button startButton = (Button) findViewById(R.id.quickgamebutton);
         final Button outof3Button = (Button) findViewById(R.id.outof3button);
@@ -26,15 +32,26 @@ public class MainActivity extends Activity {
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Bundle settingsBundle = new Bundle();
+                settingsBundle.putInt("points",points);
                 Intent quickGame = new Intent(MainActivity.this,Game.class);
+                quickGame.putExtras(settingsBundle);
                 startActivity(quickGame);
+            }
+        });
+
+        outof3Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent settings = new Intent(MainActivity.this,Settings.class);
+                startActivityForResult(settings,SETTINGS_REQUEST);
             }
         });
 
@@ -45,6 +62,16 @@ public class MainActivity extends Activity {
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if (requestCode == SETTINGS_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                points = data.getExtras().getInt("points");
+            }
+        }
     }
 
     @Override
