@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.View;
 
 import java.util.concurrent.Executors;
@@ -81,6 +82,7 @@ public class Puck extends View {
         }
         xPos += xVel/REFRESH_RATE;
         yPos += yVel/REFRESH_RATE;
+        Log.d(TAG, "Puck velocity: x: " + xVel + "y: " + yVel);
     }
 
 
