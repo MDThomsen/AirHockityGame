@@ -2,8 +2,11 @@ package com.example.mthomsen.airhockitygame;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,12 +18,14 @@ public class MainActivity extends Activity {
 
     private int points = 3;
     static final int SETTINGS_REQUEST = 1;
+    SharedPreferences prefs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        prefs.edit().putInt("points",3).commit();
 
 
 
@@ -51,7 +56,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent settings = new Intent(MainActivity.this,Settings.class);
-                startActivityForResult(settings,SETTINGS_REQUEST);
+                startActivity(settings);
             }
         });
 
@@ -64,28 +69,7 @@ public class MainActivity extends Activity {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        if (requestCode == SETTINGS_REQUEST) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
-                points = data.getExtras().getInt("points");
-            }
-        }
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        Log.d("Hej", "hej");
-        return super.onOptionsItemSelected(item);
-    }
+
 }

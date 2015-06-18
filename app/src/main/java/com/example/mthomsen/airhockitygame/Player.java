@@ -28,7 +28,6 @@ public class Player extends View {
         this.radius = 64f;
         this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2* (int) radius, 2* (int)radius, false);
 
-
     }
     @Override
     protected synchronized void onDraw(Canvas canvas) {
@@ -55,40 +54,4 @@ public class Player extends View {
     public double getRadius() {
         return radius;
     }
-/*    public boolean onTouch(View view, MotionEvent motionEvent) {
-        int dx = 0;
-        int dy = 0;
-        switch (motionEvent.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                dx = (int) motionEvent.getX();
-                dy = (int) motionEvent.getY();
-
-
-            case MotionEvent.ACTION_MOVE:
-                int x = (int) motionEvent.getX();
-                int y = (int) motionEvent.getY();
-                RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) view.getLayoutParams();
-                int left = lp.leftMargin + (x - dx);
-                int top = lp.topMargin + (y - dy);
-                lp.leftMargin = left;
-                lp.topMargin = top;
-                view.setLayoutParams(lp);
-                break;
-        }
-        return true;
-    }*/
-    /*public boolean onTouch(View view, MotionEvent motionEvent) {
-
-            if (motionEvent.getAction() == (MotionEvent.ACTION_MOVE)) {
-                int x = (int) motionEvent.getX();
-                int y = (int) motionEvent.getY();
-
-                xPos = x;
-                yPos = y;
-                invalidate();
-            }
-
-
-        return true;
-    }*/
 }

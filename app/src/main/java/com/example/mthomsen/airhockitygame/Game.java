@@ -1,9 +1,12 @@
 package com.example.mthomsen.airhockitygame;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
@@ -21,7 +24,7 @@ public class Game extends Activity {
     private int pointsToWin = 10;
     private static final String TAG = "AirHockity-tag";
     private Player[] players;
-
+    SharedPreferences prefs = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,13 +35,12 @@ public class Game extends Activity {
 
         // Set up user interface
         mFrame = (RelativeLayout) findViewById(R.id.frame);
-      //    Bundle input = getIntent().getExtras();
-       // if(input != null){
-        //    int t = input.getInt("points");
-         //   String k = Integer.toString(t);
-          //  Toast lol = Toast.makeText(getApplicationContext(), t, Toast.LENGTH_LONG);
-          //    lol.show();
-       // }
+        prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+        int k = prefs.getInt("points",0);
+
+         Toast test = Toast.makeText(getApplicationContext(), Integer.toString(k), Toast.LENGTH_LONG);
+         test.show();
+
 
 
         players = new Player[2];
