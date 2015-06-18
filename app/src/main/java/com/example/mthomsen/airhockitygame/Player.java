@@ -13,11 +13,11 @@ import android.widget.RelativeLayout;
  * Created by MaritaHolm on 17/06/15.
  */
 
-public class Player extends View implements View.OnTouchListener {
+public class Player extends View {
     private final Paint mPainter = new Paint();
-    private float xPos;
-    private float yPos;
-    private int radius;
+    private double xPos;
+    private double yPos;
+    private double radius;
     Bitmap mScaledBitmap;
     private static final String TAG = "AirHockity-tag";
 
@@ -25,9 +25,9 @@ public class Player extends View implements View.OnTouchListener {
         super(context);
         this.xPos = x;
         this.yPos = y;
-        this.radius = 64;
-        this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap, 2*radius, 2*radius, false);
-        this.setOnTouchListener(this);
+        this.radius = 64f;
+        this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2* (int) radius, 2* (int)radius, false);
+
 
     }
     @Override
@@ -35,19 +35,25 @@ public class Player extends View implements View.OnTouchListener {
         Log.d(TAG, "onDraw");
         canvas.save();
 
-        canvas.drawBitmap(mScaledBitmap, xPos, yPos,mPainter);
+        canvas.drawBitmap(mScaledBitmap, (float) xPos, (float) yPos, mPainter);
 
         canvas.restore();
 
     }
     public boolean intersects(float x, float y) {
-        return (xPos < x && xPos + 2*radius > y && yPos < y && yPos + 2*radius > y);
+        Log.d(TAG, "xPos: "+ xPos + "yPos: " +yPos);
+        Log.d(TAG, "Centrum: ("+ (xPos+radius) + "," +(yPos+radius)+ ")");
+        Log.d(TAG, "x: " + (x) + " y: " + Math.abs(y) + " radius: " + radius);
+        return (Math.abs(x-(xPos+radius)) < radius && Math.abs(y-(yPos+radius)) < radius);
     }
 
-    public void move(float x, float y) {
-        xPos +=x;
-        yPos +=y;
+    public void moveTo(double x, double y) {
+        xPos = x;
+        yPos = y;
         invalidate();
+    }
+    public double getRadius() {
+        return radius;
     }
 /*    public boolean onTouch(View view, MotionEvent motionEvent) {
         int dx = 0;
@@ -71,7 +77,7 @@ public class Player extends View implements View.OnTouchListener {
         }
         return true;
     }*/
-    public boolean onTouch(View view, MotionEvent motionEvent) {
+    /*public boolean onTouch(View view, MotionEvent motionEvent) {
 
             if (motionEvent.getAction() == (MotionEvent.ACTION_MOVE)) {
                 int x = (int) motionEvent.getX();
@@ -84,5 +90,5 @@ public class Player extends View implements View.OnTouchListener {
 
 
         return true;
-    }
+    }*/
 }
