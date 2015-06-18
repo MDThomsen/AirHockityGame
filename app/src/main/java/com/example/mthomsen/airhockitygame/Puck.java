@@ -21,20 +21,22 @@ public class Puck extends View {
     private float xVel;
     private float yVel;
     private float radius;
+    private Game game;
     private Bitmap mScaledBitmap;
     private static final int REFRESH_RATE = 40;
     private static final String TAG = "Tag-AirHockity";
     private View mFrame;
 
 
-    public Puck(Context context, float x, float y, Bitmap bitmap, View frame) {
+    public Puck(Context context, float x, float y, Bitmap bitmap, View frame,Game game) {
         super(context);
         this.xPos = x;
         this.yPos = y;
-        this.xVel = 0;
-        this.yVel = 0;
+        this.xVel = 100;
+        this.yVel = 100;
         this.radius = 32;
         this.mFrame = frame;
+        this.game = game;
         this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2 * (int)radius, 2 * (int)radius, false);
     }
     @Override
@@ -80,18 +82,31 @@ public class Puck extends View {
         if (intersectsVerticalEdge()) {
             xVel = xVel * (-1);
         }
+        if (intersectsPlayer()) {
+            xVel = xVel * (-1);
+            yVel = yVel * (-1);
+        }
         xPos += xVel/REFRESH_RATE;
         yPos += yVel/REFRESH_RATE;
-        Log.d(TAG, "Puck velocity: x: " + xVel + "y: " + yVel);
+        Log.d(TAG, "Puck x: " + xPos + " puck y: " + yPos + "Bottom: " + mFrame.getBottom());
     }
-
-
 
     private boolean intersectsVerticalEdge() {
-        return (xPos == mFrame.getLeft() || xPos + 2 * radius == mFrame.getRight());
+        return (xPos < mFrame.getLeft() || xPos + 2 * radius > mFrame.getRight());
     }
     private boolean intersectsHorizontalEdge() {
-        return (yPos == mFrame.getTop() || yPos + 2 * radius == mFrame.getBottom());
+        return (yPos < mFrame.getTop() || yPos + 2 * radius > mFrame.getBottom());
+    }
+
+    private boolean intersectsPlayer() {
+        Player[] players = game.getPlayers();
+        for (Player p: players) {
+            if (p.intersects(this)) {
+                Log.d(TAG, "intersectsPlayer");
+                return true;
+            }
+        }
+        return false;
     }
 
 }

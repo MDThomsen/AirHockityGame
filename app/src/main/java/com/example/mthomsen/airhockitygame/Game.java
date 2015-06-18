@@ -28,14 +28,12 @@ public class Game extends Activity implements View.OnTouchListener{
     private Player player2;
     private Puck puck;
     private int pointsToWin = 10;
-    private static final String TAG = "AirHockity-tag";
+    private static final String TAG = "Tag-AirHockity";
     private Player[] players;
     SharedPreferences prefs = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        Log.d(TAG, "onCreate");
 
         setContentView(R.layout.activity_game);
 
@@ -47,7 +45,6 @@ public class Game extends Activity implements View.OnTouchListener{
 
          Toast test = Toast.makeText(getApplicationContext(), Integer.toString(k), Toast.LENGTH_LONG);
          test.show();
-
 
 
         players = new Player[2];
@@ -65,8 +62,9 @@ public class Game extends Activity implements View.OnTouchListener{
         mFrame.addView(player2);
 
         mBitmap3 = BitmapFactory.decodeResource(getResources(),R.drawable.puck);
-        puck = new Puck(getApplicationContext(),350, 600,mBitmap3, mFrame);
+        puck = new Puck(getApplicationContext(),350, 600,mBitmap3, mFrame,this);
         mFrame.addView(puck);
+        puck.start();
 
 
     }
@@ -97,7 +95,6 @@ public class Game extends Activity implements View.OnTouchListener{
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         Player p = getPlayerAt(event.getX(), event.getY());
-        Log.d(TAG, "get player: " + p);
         if (p != null) {
 
             if (event.getAction() == (MotionEvent.ACTION_MOVE)) {
@@ -108,14 +105,18 @@ public class Game extends Activity implements View.OnTouchListener{
                 if (p.intersects(puck)) {
                     VelocityTracker tracker = VelocityTracker.obtain();
                     tracker.addMovement(event);
-                    tracker.computeCurrentVelocity(10);
-                    puck.setVelocity(tracker.getXVelocity(),tracker.getYVelocity());
-                    puck.start();
+                    tracker.computeCurrentVelocity(1000);
+                    puck.setVelocity(tracker.getXVelocity(), tracker.getYVelocity());
 
+                    return true;
                 }
             }
         }
         return true;
+    }
+
+    public Player[] getPlayers() {
+        return players;
     }
 
 }

@@ -39,8 +39,9 @@ public class Player extends View {
         return (Math.abs(x - (xPos + radius)) < radius && Math.abs(y - (yPos + radius)) < radius);
     }
     public boolean intersects(Puck puck) {
-        return ((xPos - puck.getX()) < radius + puck.getRadius() &&
-                yPos - puck.getY() < radius + puck.getRadius());
+        return (distanceTo(puck) < radius+puck.getRadius());
+        /*((xPos - puck.getX()) < radius + puck.getRadius() &&
+                yPos - puck.getY() < radius + puck.getRadius());*/
     }
 
 
@@ -52,5 +53,9 @@ public class Player extends View {
 
     public double getRadius() {
         return radius;
+    }
+    public double distanceTo(Puck puck) {
+        return (Math.sqrt(Math.pow((puck.getX()+puck.getRadius())- (xPos + radius), 2)+
+                Math.pow((puck.getY()+puck.getRadius())-(yPos+radius),2)));
     }
 }
