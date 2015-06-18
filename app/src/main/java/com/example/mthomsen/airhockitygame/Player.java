@@ -15,42 +15,41 @@ import android.widget.RelativeLayout;
 
 public class Player extends View {
     private final Paint mPainter = new Paint();
-    private double xPos;
-    private double yPos;
-    private double radius;
+    private float xPos;
+    private float yPos;
+    private float radius;
     Bitmap mScaledBitmap;
-    private static final String TAG = "AirHockity-tag";
+    private static final String TAG = "Tag-AirHockity";
 
     public Player(Context context, float x, float y, Bitmap bitmap) {
         super(context);
         this.xPos = x;
         this.yPos = y;
-        this.radius = 64f;
-        this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2* (int) radius, 2* (int)radius, false);
-
+        this.radius = 64;
+        this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2 * 64, 2 * 64, false);
+//        this.mScaledBitmap = bitmap;
     }
+
     @Override
     protected synchronized void onDraw(Canvas canvas) {
-        Log.d(TAG, "onDraw");
-        canvas.save();
-
-        canvas.drawBitmap(mScaledBitmap, (float) xPos, (float) yPos, mPainter);
-
-        canvas.restore();
+        canvas.drawBitmap(mScaledBitmap, xPos, yPos, mPainter);
 
     }
+
     public boolean intersects(float x, float y) {
-        Log.d(TAG, "xPos: "+ xPos + "yPos: " +yPos);
-        Log.d(TAG, "Centrum: ("+ (xPos+radius) + "," +(yPos+radius)+ ")");
+        Log.d(TAG, "xPos: " + xPos + "yPos: " + yPos);
+        Log.d(TAG, "Centrum: (" + (xPos + radius) + "," + (yPos + radius) + ")");
         Log.d(TAG, "x: " + (x) + " y: " + Math.abs(y) + " radius: " + radius);
-        return (Math.abs(x-(xPos+radius)) < radius && Math.abs(y-(yPos+radius)) < radius);
+
+        return (Math.abs(x - (xPos + radius)) < radius && Math.abs(y - (yPos + radius)) < radius);
     }
 
-    public void moveTo(double x, double y) {
-        xPos = x;
-        yPos = y;
+    public void moveTo(float x, float y) {
+        xPos = x - radius;
+        yPos = y - radius;
         invalidate();
     }
+
     public double getRadius() {
         return radius;
     }

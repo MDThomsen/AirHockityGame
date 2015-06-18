@@ -9,15 +9,17 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 /**
  * Created by MaritaHolm on 17/06/15.
  */
-public class Game extends Activity {
+public class Game extends Activity implements View.OnTouchListener{
 
-    private RelativeLayout mFrame;
+    private ViewGroup mFrame;
     private Bitmap mBitmap1;
     private Bitmap mBitmap2;
     private Player player1;
@@ -35,7 +37,8 @@ public class Game extends Activity {
         setContentView(R.layout.activity_game);
 
         // Set up user interface
-        mFrame = (RelativeLayout) findViewById(R.id.frame);
+        mFrame = (ViewGroup) findViewById(R.id.frame);
+        mFrame.setOnTouchListener(this);
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
         int k = prefs.getInt("points",0);
 
@@ -46,12 +49,14 @@ public class Game extends Activity {
 
         players = new Player[2];
 
-        mBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.player1);
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inScaled = false;
+        mBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.player1, opts);
         player1 = new Player(getApplicationContext(), 100,100, mBitmap1);
         players[0]=player1;
         mFrame.addView(player1);
 
-        mBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.player2);
+        mBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.player2, opts);
         player2 = new Player(getApplicationContext(), 100, 800, mBitmap2);
         players[1]=player2;
         mFrame.addView(player2);
@@ -79,17 +84,20 @@ public class Game extends Activity {
         }
         return null;
     }
-    public boolean onTouchEvent(MotionEvent motionEvent) {
-        Player p = getPlayerAt(motionEvent.getRawX(), motionEvent.getRawY());
+
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        Player p = getPlayerAt(event.getX(), event.getY());
         Log.d(TAG, "get player: " + p);
         if (p != null) {
 
-                if (motionEvent.getAction() == (MotionEvent.ACTION_MOVE)) {
-                    float x = motionEvent.getRawX();
-                    float y = motionEvent.getRawY();
+            if (event.getAction() == (MotionEvent.ACTION_MOVE)) {
+                float x = event.getX();
+                float y = event.getY();
 
-                    p.moveTo(x - p.getRadius(), y - p.getRadius());
-                }
+                p.moveTo(x ,y);
+            }
         }
         return true;
     }
