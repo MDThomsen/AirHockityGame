@@ -27,7 +27,6 @@ public class Player extends View {
         this.yPos = y;
         this.radius = 64;
         this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2 * 64, 2 * 64, false);
-//        this.mScaledBitmap = bitmap;
     }
 
     @Override
@@ -37,12 +36,13 @@ public class Player extends View {
     }
 
     public boolean intersects(float x, float y) {
-        Log.d(TAG, "xPos: " + xPos + "yPos: " + yPos);
-        Log.d(TAG, "Centrum: (" + (xPos + radius) + "," + (yPos + radius) + ")");
-        Log.d(TAG, "x: " + (x) + " y: " + Math.abs(y) + " radius: " + radius);
-
         return (Math.abs(x - (xPos + radius)) < radius && Math.abs(y - (yPos + radius)) < radius);
     }
+    public boolean intersects(Puck puck) {
+        return ((xPos - puck.getX()) < radius + puck.getRadius() &&
+                yPos - puck.getY() < radius + puck.getRadius());
+    }
+
 
     public void moveTo(float x, float y) {
         xPos = x - radius;

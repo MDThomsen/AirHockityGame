@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -22,8 +23,10 @@ public class Game extends Activity implements View.OnTouchListener{
     private ViewGroup mFrame;
     private Bitmap mBitmap1;
     private Bitmap mBitmap2;
+    private Bitmap mBitmap3;
     private Player player1;
     private Player player2;
+    private Puck puck;
     private int pointsToWin = 10;
     private static final String TAG = "AirHockity-tag";
     private Player[] players;
@@ -61,6 +64,11 @@ public class Game extends Activity implements View.OnTouchListener{
         players[1]=player2;
         mFrame.addView(player2);
 
+        mBitmap3 = BitmapFactory.decodeResource(getResources(),R.drawable.puck);
+        puck = new Puck(getApplicationContext(),350, 600,mBitmap3, mFrame);
+        mFrame.addView(puck);
+
+
     }
     @Override
     protected void onResume() {
@@ -97,8 +105,17 @@ public class Game extends Activity implements View.OnTouchListener{
                 float y = event.getY();
 
                 p.moveTo(x ,y);
+                if (p.intersects(puck)) {
+                    VelocityTracker tracker = VelocityTracker.obtain();
+                    tracker.addMovement(event);
+                    tracker.computeCurrentVelocity(10);
+                    puck.setVelocity(tracker.getXVelocity(),tracker.getYVelocity());
+                    puck.start();
+
+                }
             }
         }
         return true;
     }
+
 }
