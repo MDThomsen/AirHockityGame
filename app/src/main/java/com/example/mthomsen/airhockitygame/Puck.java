@@ -32,8 +32,8 @@ public class Puck extends View {
         super(context);
         this.xPos = x;
         this.yPos = y;
-        this.xVel = 100;
-        this.yVel = 100;
+        this.xVel = 0;
+        this.yVel = 0;
         this.radius = 32;
         this.mFrame = frame;
         this.game = game;
@@ -82,13 +82,23 @@ public class Puck extends View {
         if (intersectsVerticalEdge()) {
             xVel = xVel * (-1);
         }
-        if (intersectsPlayer()) {
-            xVel = xVel * (-1);
-            yVel = yVel * (-1);
+        if (intersectsPlayer() != null) {
+            Player p = intersectsPlayer();
+            double playerCentrumX = p.getX()+p.getRadius();
+            double playerCentrumY = p.getY()+p.getRadius();
+            double centrumX = xPos + radius;
+            double centrumY = yPos + radius;
+            double x =  ((playerCentrumX) * p.getRadius() + (centrumX)*radius)/(p.getRadius() + radius);
+            double y = ((playerCentrumY) * p.getRadius() + (centrumY)*radius)/(p.getRadius() + radius);
+            double length = Math.sqrt(Math.pow(playerCentrumX* x,2) + Math.pow(playerCentrumY* y,2));
+            xVel = (float) (xVel - 2*(xVel * ((playerCentrumX* x)/length)) * (((playerCentrumX)* x)/length));
+            yVel = (float) (yVel - 2*(yVel * ((playerCentrumY* y)/length)) * (((playerCentrumY)* y)/length));
+            Log.d(TAG, "Velocoty: x: " + xVel + " y: " + yVel);
         }
+
         xPos += xVel/REFRESH_RATE;
         yPos += yVel/REFRESH_RATE;
-        Log.d(TAG, "Puck x: " + xPos + " puck y: " + yPos + "Bottom: " + mFrame.getBottom());
+
     }
 
     private boolean intersectsVerticalEdge() {
@@ -98,15 +108,14 @@ public class Puck extends View {
         return (yPos < mFrame.getTop() || yPos + 2 * radius > mFrame.getBottom());
     }
 
-    private boolean intersectsPlayer() {
+    private Player intersectsPlayer() {
         Player[] players = game.getPlayers();
         for (Player p: players) {
             if (p.intersects(this)) {
-                Log.d(TAG, "intersectsPlayer");
-                return true;
+                return p;
             }
         }
-        return false;
+        return null;
     }
 
 }
