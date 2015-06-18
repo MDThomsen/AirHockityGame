@@ -16,7 +16,7 @@ import java.lang.reflect.Array;
 /**
  * Created by MaritaHolm on 17/06/15.
  */
-public class Game extends Activity{
+public class Game extends Activity {
 
     private RelativeLayout mFrame;
     private Bitmap mBitmap1;
@@ -64,15 +64,6 @@ public class Game extends Activity{
 
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (intersects(event.getRawX(), event.getRawY())) {
-
-        }
-        return true;
-
-    }
-
     private boolean intersects(float x, float y) {
         for (Player p: players) {
             if (p.intersects(x,y)) {
@@ -81,6 +72,13 @@ public class Game extends Activity{
         }
         return false;
     }
-
+    private Player getPlayerAt(float x, float y) {
+        for (Player p: players) {
+            if (p.intersects(x,y)) {
+                return p;
+            }
+        }
+        return null;
+    }
 
 }
