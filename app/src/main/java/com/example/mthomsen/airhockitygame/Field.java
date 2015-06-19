@@ -62,12 +62,12 @@ public class Field extends View {
 
     public void setScoreTop(int s){
         this.scoreTop=s;
-        invalidate();
+        this.postInvalidate();
     }
 
     public void setScoreBot(int s){
         this.scoreBot=s;
-        invalidate();
+        this.postInvalidate();
     }
 
     public int getScoreTop(){
@@ -81,7 +81,7 @@ public class Field extends View {
     public void resetScore(){
         this.scoreBot=0;
         this.scoreTop=0;
-        this.invalidate();
+
     }
 
     public int getTopWins() {

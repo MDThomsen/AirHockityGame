@@ -101,20 +101,19 @@ public class Game extends Activity implements View.OnTouchListener{
                 puck.move(REFRESH_RATE);
                 puck.deaccelerate();
                 puck.postInvalidate();
-                if(puck.topGoal()){
-                   mField.setScoreBot(mField.getScoreBot()+1);
-                    puck.invalidate();
-
+                if (puck.topGoal()) {
+                    mField.setScoreBot(mField.getScoreBot() + 1);
+                    resetPlayerPuck();
                 }
-                if(puck.botGoal()){
-                   mField.setScoreTop(mField.getScoreTop()+1);
-                    puck.invalidate();
+                if (puck.botGoal()) {
+                    mField.setScoreTop(mField.getScoreTop() + 1);
+                    resetPlayerPuck();
                 }
-                if(mField.getScoreBot()==10){
-                    mField.setBotWins(mField.getBotWins()+1);
+                if (mField.getScoreBot() == 10) {
+                    mField.setBotWins(mField.getBotWins() + 1);
                 }
-                if(mField.getScoreTop()==10){
-                    mField.setTopWins(mField.getTopWins()+1);
+                if (mField.getScoreTop() == 10) {
+                    mField.setTopWins(mField.getTopWins() + 1);
                 }
             }
         }, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);
@@ -138,23 +137,43 @@ public class Game extends Activity implements View.OnTouchListener{
     }
 
     private void resetPlayerPuck(){
+        puck.resetVelocity();
+        puck.setX(mFrame.getRight() / 2);
+        puck.setY(mFrame.getBottom() / 2);
+        player1.moveTo(mFrame.getRight() / 2, mFrame.getBottom() / 4);
+        player2.moveTo(mFrame.getRight()/2,mFrame.getBottom()*(3/4));
+
 
     }
 
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        Player p = getPlayerAt(event.getX(), event.getY());
-        if (p != null) {
+        VelocityTracker tracker = VelocityTracker.obtain();
+        tracker.addMovement(event);
+        tracker.computeCurrentVelocity(1000);
+        if (event.getAction() == (MotionEvent.ACTION_MOVE)) {
+            Player p = getPlayerAt(event.getX(), event.getY());
+            if (p != null) {
 
-            if (event.getAction() == (MotionEvent.ACTION_MOVE)) {
                 float x = event.getX();
                 float y = event.getY();
 
                 p.moveTo(x, y);
-                VelocityTracker tracker = VelocityTracker.obtain();
-                tracker.addMovement(event);
-                tracker.computeCurrentVelocity(1000);
+                if (p.intersects(puck)) {
+                    puck.setVelocity(VelocityTrackerCompat.getXVelocity(tracker,event.getPointerId(event.getActionIndex())), VelocityTrackerCompat.getYVelocity(tracker, event.getPointerId(event.getActionIndex())));
+                    return true;
+                }
+            }
+        }
+        if (event.getAction() == (MotionEvent.ACTION_POINTER_DOWN)) {
+            Player p = getPlayerAt(event.getX(), event.getY());
+            if (p != null) {
+
+                float x = event.getX();
+                float y = event.getY();
+
+                p.moveTo(x, y);
                 if (p.intersects(puck)) {
                     puck.setVelocity(VelocityTrackerCompat.getXVelocity(tracker,event.getPointerId(event.getActionIndex())), VelocityTrackerCompat.getYVelocity(tracker, event.getPointerId(event.getActionIndex())));
                     return true;

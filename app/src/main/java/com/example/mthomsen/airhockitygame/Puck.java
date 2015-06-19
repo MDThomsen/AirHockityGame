@@ -54,9 +54,22 @@ public class Puck extends View {
         return yPos;
     }
 
+    public void setX(float x){
+        this.xPos=x;
+    }
+
+    public void setY(float y){
+        this.yPos=y;
+    }
+
     public void setVelocity(float x, float y) {
         xVel += x;
         yVel += y;
+    }
+
+    public void resetVelocity(){
+        xVel = 0;
+        yVel = 0;
     }
 
     protected void move(int rate) {
