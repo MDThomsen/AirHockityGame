@@ -40,8 +40,7 @@ public class Player extends View {
     }
     public boolean intersects(Puck puck) {
         return (distanceTo(puck) <= radius+puck.getRadius());
-        /*((xPos - puck.getX()) < radius + puck.getRadius() &&
-                yPos - puck.getY() < radius + puck.getRadius());*/
+
     }
 
 
@@ -58,4 +57,13 @@ public class Player extends View {
         return (Math.sqrt(Math.pow((puck.getX()+puck.getRadius())- (xPos + radius), 2)+
                 Math.pow((puck.getY()+puck.getRadius())-(yPos+radius),2)));
     }
+
+    public float getXPos(){
+        return this.xPos;
+    }
+
+    public float getYPos(){
+        return this.yPos;
+    }
+
 }

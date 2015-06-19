@@ -23,8 +23,16 @@ public class Settings extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        final RadioGroup pointsGroup  = (RadioGroup) findViewById(R.id.pointsGroup);
-        pointsGroup.clearCheck();
+         final RadioGroup pointsGroup  = (RadioGroup) findViewById(R.id.pointsGroup);
+        int set = prefs.getInt("points",0);
+        if(set == 3){
+           pointsGroup.check(R.id.radio_three);
+        } else if (set == 5){
+            pointsGroup.check(R.id.radio_five);
+        } else {
+            pointsGroup.check(R.id.radio_ten);
+        }
+
         Button defButton = (Button) findViewById(R.id.default_button);
         Button retButton = (Button) findViewById(R.id.return_button);
 

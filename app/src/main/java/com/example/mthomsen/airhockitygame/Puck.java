@@ -23,7 +23,6 @@ public class Puck extends View {
     private float radius;
     private Game game;
     private Bitmap mScaledBitmap;
-    private static final int REFRESH_RATE = 40;
     private static final String TAG = "Tag-AirHockity";
     private View mFrame;
 
@@ -57,25 +56,8 @@ public class Puck extends View {
         xVel = x;
         yVel = y;
     }
-    public void start() {
 
-        // Creates a WorkerThread
-        ScheduledExecutorService executor = Executors
-                .newScheduledThreadPool(1);
-
-        // Execute the run() in Worker Thread every REFRESH_RATE
-        // milliseconds
-        // Save reference to this job in mMoverFuture
-        executor.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-
-                move();
-                postInvalidate();
-            }
-        }, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);
-    }
-    private void move() {
+    protected void move(int rate) {
         if (intersectsHorizontalEdge()) {
             yVel = yVel * (-1);
         }
@@ -99,16 +81,16 @@ public class Puck extends View {
             Log.d(TAG, "Velocoty: x: " + xVel + " y: " + yVel);
         }
 
-        xPos += xVel/REFRESH_RATE;
-        yPos += yVel/REFRESH_RATE;
+        xPos += xVel/rate;
+        yPos += yVel/rate;
 
     }
 
     private boolean intersectsVerticalEdge() {
-        return (xPos <= mFrame.getLeft() || xPos + 2 * radius >= mFrame.getRight());
+        return (xPos <= mFrame.getLeft()+11 || xPos + 2 * radius >= mFrame.getRight()-15);
     }
     private boolean intersectsHorizontalEdge() {
-        return (yPos <= mFrame.getTop() || yPos + 2 * radius >= mFrame.getBottom());
+        return (yPos <= mFrame.getTop()+11 || yPos + 2 * radius >= mFrame.getBottom()-11);
     }
 
     private Player intersectsPlayer() {
