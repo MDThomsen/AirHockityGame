@@ -88,11 +88,14 @@ public class Puck extends View {
             double playerCentrumY = p.getY()+p.getRadius();
             double centrumX = xPos + radius;
             double centrumY = yPos + radius;
-            double x =  ((playerCentrumX) * p.getRadius() + (centrumX)*radius)/(p.getRadius() + radius);
-            double y = ((playerCentrumY) * p.getRadius() + (centrumY)*radius)/(p.getRadius() + radius);
-            double length = Math.sqrt(Math.pow(playerCentrumX* x,2) + Math.pow(playerCentrumY* y,2));
-            xVel = (float) (xVel - 2*(xVel * ((playerCentrumX* x)/length)) * (((playerCentrumX)* x)/length));
-            yVel = (float) (yVel - 2*(yVel * ((playerCentrumY* y)/length)) * (((playerCentrumY)* y)/length));
+            double x =  (playerCentrumX * p.getRadius() + centrumX*radius)/(p.getRadius() + radius);
+            double y = (playerCentrumY * p.getRadius() + centrumY*radius)/(p.getRadius() + radius);
+            double Nx = (x-playerCentrumX)/p.getRadius();
+            double Ny = (y-playerCentrumY)/p.getRadius();
+            float newXVel = (float) (xVel - 2*(Nx * xVel + Ny * yVel) * Nx);
+            float newYVel = (float) (yVel - 2*(Ny * yVel+ Ny * yVel) * Ny);
+            xVel = newXVel;
+            yVel = newYVel;
             Log.d(TAG, "Velocoty: x: " + xVel + " y: " + yVel);
         }
 
@@ -102,10 +105,10 @@ public class Puck extends View {
     }
 
     private boolean intersectsVerticalEdge() {
-        return (xPos < mFrame.getLeft() || xPos + 2 * radius > mFrame.getRight());
+        return (xPos <= mFrame.getLeft() || xPos + 2 * radius >= mFrame.getRight());
     }
     private boolean intersectsHorizontalEdge() {
-        return (yPos < mFrame.getTop() || yPos + 2 * radius > mFrame.getBottom());
+        return (yPos <= mFrame.getTop() || yPos + 2 * radius >= mFrame.getBottom());
     }
 
     private Player intersectsPlayer() {
