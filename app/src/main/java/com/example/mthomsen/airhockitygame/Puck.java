@@ -73,13 +73,51 @@ public class Puck extends View {
     }
 
     protected void move(int rate) {
+        Log.d(TAG, "(" + xPos + ", " + yPos + ")");
+        Log.d(TAG, "intersectsHorizontalEdge: " + intersectsHorizontalEdge());
         if (intersectsHorizontalEdge()) {
             yVel = yVel * (-1);
         }
+        Log.d(TAG, "intersectsVerticalEdge: " + intersectsVerticalEdge());
         if (intersectsVerticalEdge()) {
             xVel = xVel * (-1);
         }
-        /*if (intersectsPlayer() != null) {
+        if (intersectsPlayer() != null) {
+            /*Player p = intersectsPlayer();
+            double playerCentrumX = p.getX()+p.getRadius();
+            double playerCentrumY = p.getY()+p.getRadius();
+            double centrumX = xPos + radius;
+            double centrumY = yPos + radius;
+
+            Vector radiusVector = new Vector((( p.getRadius()/(p.getRadius()+radius)) * (playerCentrumX - centrumX)),
+                    (( p.getRadius()/(p.getRadius()+radius)) * (playerCentrumY - centrumY)));
+            Log.d(TAG, "radiusVector " + radiusVector);
+            Vector tangentVector = new Vector((-1)*radiusVector.getY(),radiusVector.getX());
+            Log.d(TAG, "tangentVector " + tangentVector);
+            Vector velVector = new Vector(xVel,yVel);
+            Log.d(TAG, "velVector " + velVector);
+
+            double inAngle = Math.acos(dotProduct(tangentVector, velVector) / (length(tangentVector) * length(velVector)));
+            Log.d(TAG, "inAngle " + inAngle);
+
+            double u = Math.asin(tangentVector.getY() / tangentVector.getX());
+            Log.d(TAG, "u " + u);
+
+            double w = (180-inAngle-u);
+            Log.d(TAG, "w " + w);
+
+            float newVelx = (float) Math.sin(w);
+            Log.d(TAG, "newVelx " + newVelx);
+
+            float newVely = (float) Math.sin(180-(w+90));
+            Log.d(TAG, "newVely " + newVely);
+
+            xVel = newVelx;
+            yVel = newVely;
+            Log.d(TAG, "xVel: " + xVel +" yVel: " + yVel);*/
+        }
+
+        /*
             Player p = intersectsPlayer();
             double playerCentrumX = p.getX()+p.getRadius();
             double playerCentrumY = p.getY()+p.getRadius();
@@ -105,6 +143,12 @@ public class Puck extends View {
                 (xPos+2*radius <= ((mFrame.getRight()/2)+100))&&(yPos <= ((mFrame.getTop()+10))));
     }
 
+    private double dotProduct(Vector a, Vector b) {
+        return (a.getX()*b.getX() + a.getY() * b.getY());
+    }
+    private double length(Vector a) {
+        return Math.sqrt(Math.pow(a.getX(),2)+Math.pow(a.getY(),2));
+    }
     protected boolean botGoal(){
         return (((xPos >= ((mFrame.getRight()/2)-100)))&&
                 (xPos+2*radius <= ((mFrame.getRight()/2)+100))&&(yPos+2*radius >= ((mFrame.getBottom()-10))));
@@ -112,6 +156,7 @@ public class Puck extends View {
     private boolean intersectsVerticalEdge() {
         return (xPos <= mFrame.getLeft()+11 || xPos + 2 * radius >= mFrame.getRight()-15);
     }
+
     private boolean intersectsHorizontalEdge() {
         return (yPos <= mFrame.getTop()+11 || yPos + 2 * radius >= mFrame.getBottom()-11)&&!((xPos>=(mFrame.getRight()/2)-100)&&(xPos+2*radius<=(mFrame.getRight()/2)+100));
     }

@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by MaritaHolm on 17/06/15.
  */
-public class Game extends Activity implements View.OnTouchListener{
+public class Game extends Activity implements View.OnTouchListener {
 
     private ViewGroup mFrame;
     private Bitmap mBitmap1;
@@ -38,6 +38,7 @@ public class Game extends Activity implements View.OnTouchListener{
     private static final String TAG = "Tag-AirHockity";
     private Player[] players;
     SharedPreferences prefs = null;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,10 +50,10 @@ public class Game extends Activity implements View.OnTouchListener{
         mFrame = (ViewGroup) findViewById(R.id.frame);
         mFrame.setOnTouchListener(this);
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        int k = prefs.getInt("points",0);
+        int k = prefs.getInt("points", 0);
 
-         Toast test = Toast.makeText(getApplicationContext(), Integer.toString(k), Toast.LENGTH_LONG);
-         test.show();
+        Toast test = Toast.makeText(getApplicationContext(), Integer.toString(k), Toast.LENGTH_LONG);
+        test.show();
 
         mField = new Field(getApplicationContext(),mFrame);
         mFrame.addView(mField);
@@ -71,13 +72,10 @@ public class Game extends Activity implements View.OnTouchListener{
         players[1]=player2;
         mFrame.addView(player2);
 
-        mBitmap3 = BitmapFactory.decodeResource(getResources(),R.drawable.puck);
-        puck = new Puck(getApplicationContext(),350, 600,mBitmap3, mFrame,this);
+        mBitmap3 = BitmapFactory.decodeResource(getResources(), R.drawable.puck);
+        puck = new Puck(getApplicationContext(), 350, 600, mBitmap3, mFrame, this);
         mFrame.addView(puck);
         start(puck,mField,mFrame);
-
-
-
 
 
     }
@@ -92,9 +90,6 @@ public class Game extends Activity implements View.OnTouchListener{
         ScheduledExecutorService executor = Executors
                 .newScheduledThreadPool(1);
 
-        // Execute the run() in Worker Thread every REFRESH_RATE
-        // milliseconds
-        // Save reference to this job in mMoverFuture
         executor.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
@@ -121,16 +116,17 @@ public class Game extends Activity implements View.OnTouchListener{
     }
 
     private boolean intersects(float x, float y) {
-        for (Player p: players) {
-            if (p.intersects(x,y)) {
+        for (Player p : players) {
+            if (p.intersects(x, y)) {
                 return true;
             }
         }
         return false;
     }
+
     private Player getPlayerAt(float x, float y) {
-        for (Player p: players) {
-            if (p.intersects(x,y)) {
+        for (Player p : players) {
+            if (p.intersects(x, y)) {
                 return p;
             }
         }
@@ -152,33 +148,19 @@ public class Game extends Activity implements View.OnTouchListener{
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        VelocityTracker tracker = VelocityTracker.obtain();
-        tracker.addMovement(event);
-        tracker.computeCurrentVelocity(1000);
-        if (event.getAction() == (MotionEvent.ACTION_MOVE)) {
-            Player p = getPlayerAt(event.getX(), event.getY());
+        for (int i = 0; i < event.getPointerCount(); i++) {
+            Player p = getPlayerAt(event.getX(i), event.getY(i));
+
             if (p != null) {
-
-                float x = event.getX();
-                float y = event.getY();
-
+                float x = event.getX(i);
+                float y = event.getY(i);
                 p.moveTo(x, y);
+                VelocityTracker tracker = VelocityTracker.obtain();
+                tracker.addMovement(event);
+                tracker.computeCurrentVelocity(1000);
                 if (p.intersects(puck)) {
-                    puck.setVelocity(VelocityTrackerCompat.getXVelocity(tracker,event.getPointerId(event.getActionIndex())), VelocityTrackerCompat.getYVelocity(tracker, event.getPointerId(event.getActionIndex())));
-                    return true;
-                }
-            }
-        }
-        if (event.getAction() == (MotionEvent.ACTION_POINTER_DOWN)) {
-            Player p = getPlayerAt(event.getX(), event.getY());
-            if (p != null) {
-
-                float x = event.getX();
-                float y = event.getY();
-
-                p.moveTo(x, y);
-                if (p.intersects(puck)) {
-                    puck.setVelocity(VelocityTrackerCompat.getXVelocity(tracker,event.getPointerId(event.getActionIndex())), VelocityTrackerCompat.getYVelocity(tracker, event.getPointerId(event.getActionIndex())));
+                    puck.setVelocity(VelocityTrackerCompat.getXVelocity(tracker, event.getPointerId(i)),
+                            VelocityTrackerCompat.getYVelocity(tracker, event.getPointerId(i)));
                     return true;
                 }
             }
