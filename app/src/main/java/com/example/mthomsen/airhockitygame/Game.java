@@ -31,6 +31,7 @@ public class Game extends Activity implements View.OnTouchListener{
     private Bitmap mBitmap3;
     private Player player1;
     private Player player2;
+    private Field mField;
     private Puck puck;
     private static final int REFRESH_RATE = 40;
     private int pointsToWin = 10;
@@ -53,7 +54,7 @@ public class Game extends Activity implements View.OnTouchListener{
          Toast test = Toast.makeText(getApplicationContext(), Integer.toString(k), Toast.LENGTH_LONG);
          test.show();
 
-        Field mField = new Field(getApplicationContext(),mFrame);
+        mField = new Field(getApplicationContext(),mFrame);
         mFrame.addView(mField);
 
         players = new Player[2];
@@ -73,7 +74,7 @@ public class Game extends Activity implements View.OnTouchListener{
         mBitmap3 = BitmapFactory.decodeResource(getResources(),R.drawable.puck);
         puck = new Puck(getApplicationContext(),350, 600,mBitmap3, mFrame,this);
         mFrame.addView(puck);
-        start(puck);
+        start(puck,mField,mFrame);
 
 
 
@@ -85,7 +86,7 @@ public class Game extends Activity implements View.OnTouchListener{
         super.onResume();
     }
 
-    public void start(final Puck puck) {
+    public void start(final Puck puck, final Field mField,final ViewGroup mFrame) {
 
         // Creates a WorkerThread
         ScheduledExecutorService executor = Executors
@@ -100,6 +101,21 @@ public class Game extends Activity implements View.OnTouchListener{
                 puck.move(REFRESH_RATE);
                 puck.deaccelerate();
                 puck.postInvalidate();
+                if(puck.topGoal()){
+                   mField.setScoreBot(mField.getScoreBot()+1);
+                    puck.invalidate();
+
+                }
+                if(puck.botGoal()){
+                   mField.setScoreTop(mField.getScoreTop()+1);
+                    puck.invalidate();
+                }
+                if(mField.getScoreBot()==10){
+                    mField.setBotWins(mField.getBotWins()+1);
+                }
+                if(mField.getScoreTop()==10){
+                    mField.setTopWins(mField.getTopWins()+1);
+                }
             }
         }, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);
     }
@@ -119,6 +135,10 @@ public class Game extends Activity implements View.OnTouchListener{
             }
         }
         return null;
+    }
+
+    private void resetPlayerPuck(){
+
     }
 
 

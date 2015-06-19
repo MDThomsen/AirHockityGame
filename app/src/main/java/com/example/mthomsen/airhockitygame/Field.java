@@ -13,10 +13,12 @@ import android.widget.TextView;
  * Created by MThomsen on 18-06-2015.
  */
 public class Field extends View {
-    View mFrame;
+    private View mFrame;
     private Paint mPaint;
-    int scoreTop = 0;
-    int scoreBot = 0;
+    private int scoreTop = 0;
+    private int scoreBot = 0;
+    private int topWins = 0;
+    private int botWins = 0;
 
     public Field(Context context, View mFrame) {
         super(context);
@@ -45,8 +47,8 @@ public class Field extends View {
 
         //centerline
         mPaint.setColor(Color.GRAY);
-        canvas.drawRect(mFrame.getLeft() + 10, (mFrame.getBottom() / 2) - 2, (mFrame.getRight() / 2) - 200, (mFrame.getBottom() / 2) + 2, mPaint);
-        canvas.drawRect((mFrame.getRight() / 2) + 200, (mFrame.getBottom() / 2) - 2, (mFrame.getRight() - 10), (mFrame.getBottom() / 2) + 2, mPaint);
+        canvas.drawRect(mFrame.getLeft() + 10, (mFrame.getBottom() / 2) - 2, (mFrame.getRight() / 2) - 150, (mFrame.getBottom() / 2) + 2, mPaint);
+        canvas.drawRect((mFrame.getRight() / 2) + 150, (mFrame.getBottom() / 2) - 2, (mFrame.getRight() - 10), (mFrame.getBottom() / 2) + 2, mPaint);
 
         //bottom score
         mPaint.setTextSize(50);
@@ -60,9 +62,41 @@ public class Field extends View {
 
     public void setScoreTop(int s){
         this.scoreTop=s;
+        invalidate();
     }
 
     public void setScoreBot(int s){
         this.scoreBot=s;
+        invalidate();
+    }
+
+    public int getScoreTop(){
+        return this.scoreTop;
+    }
+
+    public int getScoreBot(){
+        return this.scoreBot;
+    }
+
+    public void resetScore(){
+        this.scoreBot=0;
+        this.scoreTop=0;
+        this.invalidate();
+    }
+
+    public int getTopWins() {
+        return topWins;
+    }
+
+    public void setTopWins(int topWins) {
+        this.topWins = topWins;
+    }
+
+    public int getBotWins() {
+        return botWins;
+    }
+
+    public void setBotWins(int botWins) {
+        this.botWins = botWins;
     }
 }

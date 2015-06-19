@@ -80,19 +80,27 @@ public class Puck extends View {
             float newYVel = (float) (yVel - 2*(Ny * yVel+ Ny * yVel) * Ny);
             xVel = newXVel;
             yVel = newYVel;
-            Log.d(TAG, "Velocoty: x: " + xVel + " y: " + yVel);
+            Log.d(TAG, "Velocity: x: " + xVel + " y: " + yVel);
         }*/
 
         xPos += xVel/rate;
         yPos += yVel/rate;
 
     }
+    protected boolean topGoal(){
+        return (((xPos >= ((mFrame.getRight()/2)-100)))&&
+                (xPos+2*radius <= ((mFrame.getRight()/2)+100))&&(yPos <= ((mFrame.getTop()+10))));
+    }
 
+    protected boolean botGoal(){
+        return (((xPos >= ((mFrame.getRight()/2)-100)))&&
+                (xPos+2*radius <= ((mFrame.getRight()/2)+100))&&(yPos+2*radius >= ((mFrame.getBottom()-10))));
+    }
     private boolean intersectsVerticalEdge() {
         return (xPos <= mFrame.getLeft()+11 || xPos + 2 * radius >= mFrame.getRight()-15);
     }
     private boolean intersectsHorizontalEdge() {
-        return (yPos <= mFrame.getTop()+11 || yPos + 2 * radius >= mFrame.getBottom()-11);
+        return (yPos <= mFrame.getTop()+11 || yPos + 2 * radius >= mFrame.getBottom()-11)&&!((xPos>=(mFrame.getRight()/2)-100)&&(xPos+2*radius<=(mFrame.getRight()/2)+100));
     }
 
     private Player intersectsPlayer() {
