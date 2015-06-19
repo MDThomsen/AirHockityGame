@@ -25,6 +25,7 @@ public class Puck extends View {
     private Bitmap mScaledBitmap;
     private static final String TAG = "Tag-AirHockity";
     private View mFrame;
+    private double deacceleration = 0.1;
 
 
     public Puck(Context context, float x, float y, Bitmap bitmap, View frame,Game game) {
@@ -52,9 +53,10 @@ public class Puck extends View {
     public float getY() {
         return yPos;
     }
+
     public void setVelocity(float x, float y) {
-        xVel = x;
-        yVel = y;
+        xVel += x;
+        yVel += y;
     }
 
     protected void move(int rate) {
@@ -64,7 +66,7 @@ public class Puck extends View {
         if (intersectsVerticalEdge()) {
             xVel = xVel * (-1);
         }
-        if (intersectsPlayer() != null) {
+        /*if (intersectsPlayer() != null) {
             Player p = intersectsPlayer();
             double playerCentrumX = p.getX()+p.getRadius();
             double playerCentrumY = p.getY()+p.getRadius();
@@ -79,7 +81,7 @@ public class Puck extends View {
             xVel = newXVel;
             yVel = newYVel;
             Log.d(TAG, "Velocoty: x: " + xVel + " y: " + yVel);
-        }
+        }*/
 
         xPos += xVel/rate;
         yPos += yVel/rate;

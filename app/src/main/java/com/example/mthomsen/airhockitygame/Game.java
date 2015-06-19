@@ -41,8 +41,6 @@ public class Game extends Activity implements View.OnTouchListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Log.d(TAG, "onCreate");
-
         setContentView(R.layout.activity_game);
 
         // Set up user interface
@@ -85,7 +83,6 @@ public class Game extends Activity implements View.OnTouchListener{
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
     public void start(final Puck puck) {
@@ -127,7 +124,6 @@ public class Game extends Activity implements View.OnTouchListener{
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         Player p = getPlayerAt(event.getX(), event.getY());
-        Log.d(TAG, "get player: " + p);
         if (p != null) {
 
             if (event.getAction() == (MotionEvent.ACTION_MOVE)) {
