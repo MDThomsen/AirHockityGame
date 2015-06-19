@@ -25,7 +25,7 @@ public class Puck extends View {
     private Bitmap mScaledBitmap;
     private static final String TAG = "Tag-AirHockity";
     private View mFrame;
-    private double deacceleration = 0.1;
+    private double DEACCELATION = 0.975;
 
 
     public Puck(Context context, float x, float y, Bitmap bitmap, View frame,Game game) {
@@ -103,6 +103,10 @@ public class Puck extends View {
             }
         }
         return null;
+    }
+    public void deaccelerate() {
+        xVel = xVel * (float) DEACCELATION;
+        yVel = yVel * (float) DEACCELATION;
     }
 
 }

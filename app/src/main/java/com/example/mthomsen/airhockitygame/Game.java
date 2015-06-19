@@ -98,6 +98,7 @@ public class Game extends Activity implements View.OnTouchListener{
             @Override
             public void run() {
                 puck.move(REFRESH_RATE);
+                puck.deaccelerate();
                 puck.postInvalidate();
             }
         }, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);
