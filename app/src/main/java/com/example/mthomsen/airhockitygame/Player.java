@@ -47,15 +47,15 @@ public class Player extends View {
     public void moveTo(float x, float y) {
         xPos = x - radius;
         yPos = y - radius;
-        invalidate();
+        postInvalidate();
     }
 
     public double getRadius() {
         return radius;
     }
     public double distanceTo(Puck puck) {
-        return (Math.sqrt(Math.pow((puck.getX()+puck.getRadius())- (xPos + radius), 2)+
-                Math.pow((puck.getY()+puck.getRadius())-(yPos+radius),2)));
+        return (Math.sqrt(Math.pow(Math.abs((puck.getX()+puck.getRadius())- (xPos + radius)), 2)+
+                Math.pow(Math.abs((puck.getY()+puck.getRadius())-(yPos+radius)),2)));
     }
 
     public float getXPos(){
@@ -65,5 +65,6 @@ public class Player extends View {
     public float getYPos(){
         return this.yPos;
     }
+
 
 }

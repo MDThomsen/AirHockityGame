@@ -62,12 +62,12 @@ public class Game extends Activity implements View.OnTouchListener{
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inScaled = false;
         mBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.player1, opts);
-        player1 = new Player(getApplicationContext(), 100,100, mBitmap1);
+        player1 = new Player(getApplicationContext(), 400,300, mBitmap1);
         players[0]=player1;
         mFrame.addView(player1);
 
         mBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.player2, opts);
-        player2 = new Player(getApplicationContext(), 100, 800, mBitmap2);
+        player2 = new Player(getApplicationContext(), 400,800, mBitmap2);
         players[1]=player2;
         mFrame.addView(player2);
 
@@ -98,6 +98,7 @@ public class Game extends Activity implements View.OnTouchListener{
         executor.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
+                Log.d(TAG,"updating");
                 puck.move(REFRESH_RATE);
                 puck.deaccelerate();
                 puck.postInvalidate();
@@ -140,8 +141,10 @@ public class Game extends Activity implements View.OnTouchListener{
         puck.resetVelocity();
         puck.setX(mFrame.getRight() / 2);
         puck.setY(mFrame.getBottom() / 2);
-        player1.moveTo(mFrame.getRight() / 2, mFrame.getBottom() / 4);
-        player2.moveTo(mFrame.getRight()/2,mFrame.getBottom()*(3/4));
+        player1.moveTo(400,300);
+        player2.moveTo(400,800);
+        /*player1.moveTo(mFrame.getRight() / 2, mFrame.getBottom() / 4);
+        player2.moveTo(mFrame.getRight()/2,mFrame.getBottom()*(3/4));*/
 
 
     }
