@@ -37,7 +37,9 @@ public class Game extends Activity implements View.OnTouchListener {
     private Field mField;
     private Puck puck;
     private static final int REFRESH_RATE = 40;
-    private int pointsToWin = 10;
+    private int pointsToWin;
+    private String friction;
+    private Boolean mode;
     private static final String TAG = "Tag-AirHockity";
     private Player[] players;
     SharedPreferences prefs = null;
@@ -53,10 +55,9 @@ public class Game extends Activity implements View.OnTouchListener {
         mFrame = (ViewGroup) findViewById(R.id.frame);
         mFrame.setOnTouchListener(this);
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        int k = prefs.getInt("points", 0);
-
-        Toast test = Toast.makeText(getApplicationContext(), Integer.toString(k), Toast.LENGTH_LONG);
-        test.show();
+        pointsToWin = prefs.getInt("points", 0);
+        friction = prefs.getString("friction", null);
+        mode = prefs.getBoolean("mode",false);
 
         mField = new Field(getApplicationContext(),mFrame);
         mFrame.addView(mField);
@@ -76,7 +77,7 @@ public class Game extends Activity implements View.OnTouchListener {
         mFrame.addView(player2);
 
         mBitmap3 = BitmapFactory.decodeResource(getResources(), R.drawable.puck);
-        puck = new Puck(getApplicationContext(), 350, 600, mBitmap3, mFrame, this);
+        puck = new Puck(getApplicationContext(), 350, 600, mBitmap3, mFrame, this,this.friction);
         mFrame.addView(puck);
         start(puck,mField,mFrame);
 
@@ -108,11 +109,26 @@ public class Game extends Activity implements View.OnTouchListener {
                     mField.setScoreTop(mField.getScoreTop() + 1);
                     resetPlayerPuck();
                 }
-                if (mField.getScoreBot() == 10) {
+                if (mField.getScoreBot() == pointsToWin) {
                     mField.setBotWins(mField.getBotWins() + 1);
+                    if(mode){
+                        if(mField.getBotWins() >= 3){
+
+                        }
+                    } else {
+
+                    }
                 }
-                if (mField.getScoreTop() == 10) {
+                if (mField.getScoreTop() == pointsToWin) {
                     mField.setTopWins(mField.getTopWins() + 1);
+                    if(mode){
+                        if(mField.getTopWins()>= 3){
+
+                        }
+                    } else {
+
+                    }
+
                 }
             }
         }, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);

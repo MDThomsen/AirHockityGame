@@ -3,6 +3,7 @@ package com.example.mthomsen.airhockitygame;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -25,23 +26,29 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        prefs.edit().putInt("points",3).commit();
+        prefs.edit().putInt("points", 3).commit();
+        prefs.edit().putString("friction","some");
 
 
 
         final Button startButton = (Button) findViewById(R.id.quickgamebutton);
-
+        startButton.setBackgroundColor(Color.RED);
+        startButton.setTextColor(Color.WHITE);
         final Button outof3Button = (Button) findViewById(R.id.outof3button);
+        outof3Button.setBackgroundColor(Color.RED);
+        outof3Button.setTextColor(Color.WHITE);
         final Button settingsButton = (Button) findViewById(R.id.settingsbutton);
+        settingsButton.setBackgroundColor(Color.RED);
+        settingsButton.setTextColor(Color.WHITE);
         final Button quitButton = (Button) findViewById(R.id.quitbutton);
+        quitButton.setBackgroundColor(Color.RED);
+        quitButton.setTextColor(Color.WHITE);
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle settingsBundle = new Bundle();
-                settingsBundle.putInt("points",points);
+                prefs.edit().putBoolean("mode",false);
                 Intent quickGame = new Intent(MainActivity.this,Game.class);
-                quickGame.putExtras(settingsBundle);
                 startActivity(quickGame);
             }
         });
@@ -49,6 +56,10 @@ public class MainActivity extends Activity {
         outof3Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                prefs.edit().putBoolean("mode",true);
+                Intent outof3Game = new Intent(MainActivity.this,Game.class);
+                startActivity(outof3Game);
+
 
             }
         });

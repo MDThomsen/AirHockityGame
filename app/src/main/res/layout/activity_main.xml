@@ -27,7 +27,7 @@
             android:id="@+id/quickgamebutton"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.07"
-            android:layout_marginTop="0dp" />
+            android:layout_marginTop="2dp" />
 
         <Button
             android:layout_width="228dp"
@@ -35,7 +35,8 @@
             android:text="Out of 3"
             android:id="@+id/outof3button"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="0.07" />
+            android:layout_weight="0.07"
+            android:layout_marginTop="2dp"/>
 
         <Button
             android:layout_width="228dp"
@@ -43,7 +44,8 @@
             android:text="Settings"
             android:id="@+id/settingsbutton"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="0.07" />
+            android:layout_weight="0.07"
+            android:layout_marginTop="2dp"/>
 
         <Button
             android:layout_width="228dp"
@@ -51,6 +53,7 @@
             android:text="Quit"
             android:id="@+id/quitbutton"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="0.07" />
+            android:layout_weight="0.07"
+            android:layout_marginTop="2dp"/>
     </LinearLayout>
 </RelativeLayout>
