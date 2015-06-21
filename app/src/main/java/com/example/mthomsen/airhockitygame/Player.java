@@ -39,7 +39,7 @@ public class Player extends View {
         return (Math.abs(x - (xPos + radius)) <= radius && Math.abs(y - (yPos + radius)) <= radius);
     }
     public boolean intersects(Puck puck) {
-        return (distanceTo(puck) <= radius+puck.getRadius());
+        return (distanceTo(puck) <= radius+puck.getRadius() );
 
     }
 

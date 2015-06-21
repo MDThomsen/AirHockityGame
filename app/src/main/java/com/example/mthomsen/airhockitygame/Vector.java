@@ -17,6 +17,9 @@ public class Vector {
     public double getY() {
         return y;
     }
+    public double length(){
+        return Math.sqrt(getX()*getX()+getY()*getY());
+    }
     @Override
     public String toString() {
         return "(" + x + ", " + y + ")";

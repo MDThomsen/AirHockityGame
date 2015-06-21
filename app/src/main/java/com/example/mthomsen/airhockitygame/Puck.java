@@ -100,7 +100,7 @@ public class Puck extends View {
             xVel = xVel * (-1);
         }
         if (intersectsPlayer() != null) {
-            /*Player p = intersectsPlayer();
+            Player p = intersectsPlayer();
             double playerCentrumX = p.getX()+p.getRadius();
             double playerCentrumY = p.getY()+p.getRadius();
             double centrumX = xPos + radius;
@@ -108,51 +108,27 @@ public class Puck extends View {
 
             Vector radiusVector = new Vector((( p.getRadius()/(p.getRadius()+radius)) * (playerCentrumX - centrumX)),
                     (( p.getRadius()/(p.getRadius()+radius)) * (playerCentrumY - centrumY)));
-            Log.d(TAG, "radiusVector " + radiusVector);
-            Vector tangentVector = new Vector((-1)*radiusVector.getY(),radiusVector.getX());
-            Log.d(TAG, "tangentVector " + tangentVector);
             Vector velVector = new Vector(xVel,yVel);
-            Log.d(TAG, "velVector " + velVector);
 
-            double inAngle = Math.acos(dotProduct(tangentVector, velVector) / (length(tangentVector) * length(velVector)));
-            Log.d(TAG, "inAngle " + inAngle);
 
-            double u = Math.asin(tangentVector.getY() / tangentVector.getX());
-            Log.d(TAG, "u " + u);
+            Vector radiusVectorNormed = new Vector(radiusVector.getX()/radiusVector.length(),
+                    radiusVector.getY()/radiusVector.length());
+            double dotProductVelocityRadius = 2 * dotProduct(velVector,radiusVectorNormed);
+            Vector radiusNormScaled = new Vector(radiusVectorNormed.getX()*dotProductVelocityRadius,
+                    radiusVectorNormed.getY()*dotProductVelocityRadius);
 
-            double w = (180-inAngle-u);
-            Log.d(TAG, "w " + w);
+            Vector newVelocity = new Vector(velVector.getX()-radiusNormScaled.getX(),
+                    velVector.getY()-radiusNormScaled.getY());
+            xVel = (float) newVelocity.getX();
+            yVel = (float) newVelocity.getY();
 
-            float newVelx = (float) Math.sin(w);
-            Log.d(TAG, "newVelx " + newVelx);
 
-            float newVely = (float) Math.sin(180-(w+90));
-            Log.d(TAG, "newVely " + newVely);
 
-            xVel = newVelx;
-            yVel = newVely;
-            Log.d(TAG, "xVel: " + xVel +" yVel: " + yVel);*/
         }
-
-        /*
-            Player p = intersectsPlayer();
-            double playerCentrumX = p.getX()+p.getRadius();
-            double playerCentrumY = p.getY()+p.getRadius();
-            double centrumX = xPos + radius;
-            double centrumY = yPos + radius;
-            double x =  (playerCentrumX * p.getRadius() + centrumX*radius)/(p.getRadius() + radius);
-            double y = (playerCentrumY * p.getRadius() + centrumY*radius)/(p.getRadius() + radius);
-            double Nx = (x-playerCentrumX)/p.getRadius();
-            double Ny = (y-playerCentrumY)/p.getRadius();
-            float newXVel = (float) (xVel - 2*(Nx * xVel + Ny * yVel) * Nx);
-            float newYVel = (float) (yVel - 2*(Ny * yVel+ Ny * yVel) * Ny);
-            xVel = newXVel;
-            yVel = newYVel;
-            Log.d(TAG, "Velocity: x: " + xVel + " y: " + yVel);
-        }*/
 
         xPos += xVel/rate;
         yPos += yVel/rate;
+        Log.d(TAG,"xvel " + xVel + " yvel" + yVel);
 
     }
     protected boolean topGoal(){
@@ -161,7 +137,7 @@ public class Puck extends View {
     }
 
     private double dotProduct(Vector a, Vector b) {
-        return (a.getX()*b.getX() + a.getY() * b.getY());
+        return a.getX()*b.getX() + a.getY() * b.getY();
     }
     private double length(Vector a) {
         return Math.sqrt(Math.pow(a.getX(),2)+Math.pow(a.getY(),2));
