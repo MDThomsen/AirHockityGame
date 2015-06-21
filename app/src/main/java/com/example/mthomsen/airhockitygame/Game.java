@@ -181,16 +181,14 @@ public class Game extends Activity implements View.OnTouchListener {
     public void onBackPressed() {
 
         createDialog(puck.getXVel(),puck.getYVel()).show();
-
-
-
-
+        
     }
 
     public Dialog createDialog(final float tempXVel, final float tempYVel) {
 
 
         puck.setVelocity(0,0);
+
        // FLAG_PAUSE_PUCK = true;
 
         CharSequence[] choices = new CharSequence[2];
