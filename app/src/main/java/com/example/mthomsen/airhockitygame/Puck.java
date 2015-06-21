@@ -53,6 +53,8 @@ public class Puck extends View {
     public float getY() {
         return yPos;
     }
+    public float getXVel() {return xVel; }
+    public float getYVel() {return yVel; }
     public void setVelocity(float x, float y) {
         xVel = x;
         yVel = y;
@@ -69,9 +71,10 @@ public class Puck extends View {
         executor.scheduleWithFixedDelay(new Runnable() {
             @Override
             public void run() {
-
-                move();
-                postInvalidate();
+                // if (!FLAG_PAUSE_PUCK) {
+                    move();
+                    postInvalidate();
+                // }
             }
         }, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);
     }
