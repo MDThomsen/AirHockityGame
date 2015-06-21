@@ -74,12 +74,24 @@ public class Puck extends View {
 
     protected void move(int rate) {
         Log.d(TAG, "(" + xPos + ", " + yPos + ")");
-        Log.d(TAG, "intersectsHorizontalEdge: " + intersectsHorizontalEdge());
-        if (intersectsHorizontalEdge()) {
+        Log.d(TAG, "intersectsTop: " + intersectsTop());
+        if (intersectsTop()) {
+            yPos = mFrame.getTop() + 1;
             yVel = yVel * (-1);
         }
-        Log.d(TAG, "intersectsVerticalEdge: " + intersectsVerticalEdge());
-        if (intersectsVerticalEdge()) {
+        Log.d(TAG, "intersectsBottom: " + intersectsBottom());
+        if (intersectsBottom()) {
+            yPos = mFrame.getBottom() - (2 * radius + 1);
+            yVel = yVel * (-1);
+        }
+        Log.d(TAG, "intersectsLeft: " + intersectsLeft());
+        if (intersectsLeft()) {
+            xPos = mFrame.getLeft() + 1;
+            xVel = xVel * (-1);
+        }
+        Log.d(TAG, "intersectsRight: " + intersectsRight());
+        if (intersectsRight()) {
+            xPos = mFrame.getRight()-(2 * radius + 1);
             xVel = xVel * (-1);
         }
         if (intersectsPlayer() != null) {
@@ -153,12 +165,19 @@ public class Puck extends View {
         return (((xPos >= ((mFrame.getRight()/2)-100)))&&
                 (xPos+2*radius <= ((mFrame.getRight()/2)+100))&&(yPos+2*radius >= ((mFrame.getBottom()-10))));
     }
-    private boolean intersectsVerticalEdge() {
-        return (xPos <= mFrame.getLeft()+11 || xPos + 2 * radius >= mFrame.getRight()-15);
+    private boolean intersectsLeft() {
+        return (xPos <= mFrame.getLeft());
+    }
+    private boolean intersectsRight() {
+        return (xPos + 2 * radius >= mFrame.getRight());
     }
 
-    private boolean intersectsHorizontalEdge() {
-        return (yPos <= mFrame.getTop()+11 || yPos + 2 * radius >= mFrame.getBottom()-11)&&!((xPos>=(mFrame.getRight()/2)-100)&&(xPos+2*radius<=(mFrame.getRight()/2)+100));
+    private boolean intersectsTop() {
+        return (yPos <= mFrame.getTop() &&!((xPos>=(mFrame.getRight()/2)-100)&&(xPos+2*radius<=(mFrame.getRight()/2)+100)));
+    }
+
+    private boolean intersectsBottom() {
+        return (yPos + 2 * radius >= mFrame.getBottom())&&!((xPos>=(mFrame.getRight()/2)-100)&&(xPos+2*radius<=(mFrame.getRight()/2)+100));
     }
 
     private Player intersectsPlayer() {
