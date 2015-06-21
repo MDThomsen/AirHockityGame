@@ -50,6 +50,41 @@
             android:layout_gravity="center_horizontal"
             android:id="@+id/radio_ten" />
     </RadioGroup>
+        <TextView
+            android:layout_gravity="center"
+            android:layout_width="175dp"
+            android:layout_height="wrap_content"
+            android:text="Friction"
+            android:textSize="30dp"
+            android:layout_marginTop="0dp" />
+        <RadioGroup
+            android:id="@+id/frictionGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal" >
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="None"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/radio_none"/>
+
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Some"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/radio_some" />
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Much"
+                android:layout_gravity="center_horizontal"
+                android:id="@+id/radio_much" />
+        </RadioGroup>
 
     <Button
         android:layout_width="126dp"

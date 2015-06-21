@@ -28,7 +28,7 @@ public class Puck extends View {
     private double DEACCELATION = 0.975;
 
 
-    public Puck(Context context, float x, float y, Bitmap bitmap, View frame,Game game) {
+    public Puck(Context context, float x, float y, Bitmap bitmap, View frame,Game game,String friction) {
         super(context);
         this.xPos = x;
         this.yPos = y;
@@ -38,6 +38,13 @@ public class Puck extends View {
         this.mFrame = frame;
         this.game = game;
         this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2 * (int)radius, 2 * (int)radius, false);
+        if(friction.equals("none")){
+            DEACCELATION = 1;
+        } else if(friction.equals("some")){
+            DEACCELATION = 0.975;
+        } else {
+            DEACCELATION = 0.9;
+        }
     }
     @Override
     protected synchronized void onDraw(Canvas canvas) {
