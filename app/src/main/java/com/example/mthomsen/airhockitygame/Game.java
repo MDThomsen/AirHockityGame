@@ -1,21 +1,14 @@
 package com.example.mthomsen.airhockitygame;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.view.VelocityTrackerCompat;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -23,13 +16,14 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by MaritaHolm on 17/06/15.
  */
-public class Game extends Activity implements View.OnTouchListener{
-
-
-    public Boolean FLAG_PAUSE_PUCK;
+public class Game extends Activity implements View.OnTouchListener {
 
     private ViewGroup mFrame;
     private Bitmap mBitmap1;
@@ -37,7 +31,9 @@ public class Game extends Activity implements View.OnTouchListener{
     private Bitmap mBitmap3;
     private Player player1;
     private Player player2;
+    private Field mField;
     private Puck puck;
+    private static final int REFRESH_RATE = 40;
     private int pointsToWin = 10;
     private static final String TAG = "Tag-AirHockity";
     private Player[] players;
@@ -50,6 +46,7 @@ public class Game extends Activity implements View.OnTouchListener{
         setContentView(R.layout.activity_game);
 
         // Set up user interface
+
         mFrame = (ViewGroup) findViewById(R.id.frame);
         mFrame.setOnTouchListener(this);
         prefs = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
@@ -58,33 +55,64 @@ public class Game extends Activity implements View.OnTouchListener{
         Toast test = Toast.makeText(getApplicationContext(), Integer.toString(k), Toast.LENGTH_LONG);
         test.show();
 
+        mField = new Field(getApplicationContext(),mFrame);
+        mFrame.addView(mField);
 
         players = new Player[2];
 
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inScaled = false;
         mBitmap1 = BitmapFactory.decodeResource(getResources(), R.drawable.player1, opts);
-        player1 = new Player(getApplicationContext(), 100, 100, mBitmap1);
-        players[0] = player1;
+        player1 = new Player(getApplicationContext(), 400,300, mBitmap1);
+        players[0]=player1;
         mFrame.addView(player1);
 
         mBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.player2, opts);
-        player2 = new Player(getApplicationContext(), 100, 800, mBitmap2);
-        players[1] = player2;
+        player2 = new Player(getApplicationContext(), 400,800, mBitmap2);
+        players[1]=player2;
         mFrame.addView(player2);
 
         mBitmap3 = BitmapFactory.decodeResource(getResources(), R.drawable.puck);
         puck = new Puck(getApplicationContext(), 350, 600, mBitmap3, mFrame, this);
         mFrame.addView(puck);
-        puck.start();
+        start(puck,mField,mFrame);
 
 
     }
-
     @Override
     protected void onResume() {
         super.onResume();
+    }
 
+    public void start(final Puck puck, final Field mField,final ViewGroup mFrame) {
+
+        // Creates a WorkerThread
+        ScheduledExecutorService executor = Executors
+                .newScheduledThreadPool(1);
+
+        executor.scheduleWithFixedDelay(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG,"updating");
+                puck.move(REFRESH_RATE);
+                puck.deaccelerate();
+                puck.postInvalidate();
+                if (puck.topGoal()) {
+                    mField.setScoreBot(mField.getScoreBot() + 1);
+                    resetPlayerPuck();
+                }
+                if (puck.botGoal()) {
+                    mField.setScoreTop(mField.getScoreTop() + 1);
+                    resetPlayerPuck();
+                }
+                if (mField.getScoreBot() == 10) {
+                    mField.setBotWins(mField.getBotWins() + 1);
+                }
+                if (mField.getScoreTop() == 10) {
+                    mField.setTopWins(mField.getTopWins() + 1);
+                }
+            }
+        }, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);
     }
 
     private boolean intersects(float x, float y) {
@@ -105,23 +133,34 @@ public class Game extends Activity implements View.OnTouchListener{
         return null;
     }
 
+    private void resetPlayerPuck(){
+        puck.resetVelocity();
+        puck.setX(mFrame.getRight() / 2);
+        puck.setY(mFrame.getBottom() / 2);
+        player1.moveTo(400,300);
+        player2.moveTo(400,800);
+        /*player1.moveTo(mFrame.getRight() / 2, mFrame.getBottom() / 4);
+        player2.moveTo(mFrame.getRight()/2,mFrame.getBottom()*(3/4));*/
+
+
+    }
+
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        Player p = getPlayerAt(event.getX(), event.getY());
-        if (p != null) {
+        for (int i = 0; i < event.getPointerCount(); i++) {
+            Player p = getPlayerAt(event.getX(i), event.getY(i));
 
-            if (event.getAction() == (MotionEvent.ACTION_MOVE)) {
-                float x = event.getX();
-                float y = event.getY();
-
+            if (p != null) {
+                float x = event.getX(i);
+                float y = event.getY(i);
                 p.moveTo(x, y);
+                VelocityTracker tracker = VelocityTracker.obtain();
+                tracker.addMovement(event);
+                tracker.computeCurrentVelocity(1000);
                 if (p.intersects(puck)) {
-                    VelocityTracker tracker = VelocityTracker.obtain();
-                    tracker.addMovement(event);
-                    tracker.computeCurrentVelocity(1000);
-                    puck.setVelocity(tracker.getXVelocity(), tracker.getYVelocity());
-
+                    puck.setVelocity(VelocityTrackerCompat.getXVelocity(tracker, event.getPointerId(i)),
+                            VelocityTrackerCompat.getYVelocity(tracker, event.getPointerId(i)));
                     return true;
                 }
             }

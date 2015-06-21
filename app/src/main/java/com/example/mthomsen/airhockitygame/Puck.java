@@ -23,9 +23,9 @@ public class Puck extends View {
     private float radius;
     private Game game;
     private Bitmap mScaledBitmap;
-    private static final int REFRESH_RATE = 40;
     private static final String TAG = "Tag-AirHockity";
     private View mFrame;
+    private double DEACCELATION = 0.975;
 
 
     public Puck(Context context, float x, float y, Bitmap bitmap, View frame,Game game) {
@@ -53,39 +53,88 @@ public class Puck extends View {
     public float getY() {
         return yPos;
     }
+
+    public void setX(float x){
+        this.xPos=x;
     public float getXVel() {return xVel; }
     public float getYVel() {return yVel; }
     public void setVelocity(float x, float y) {
         xVel = x;
         yVel = y;
     }
-    public void start() {
 
-        // Creates a WorkerThread
-        ScheduledExecutorService executor = Executors
-                .newScheduledThreadPool(1);
-
-        // Execute the run() in Worker Thread every REFRESH_RATE
-        // milliseconds
-        // Save reference to this job in mMoverFuture
-        executor.scheduleWithFixedDelay(new Runnable() {
-            @Override
-            public void run() {
-                // if (!FLAG_PAUSE_PUCK) {
-                    move();
-                    postInvalidate();
-                // }
-            }
-        }, 0, REFRESH_RATE, TimeUnit.MILLISECONDS);
+    public void setY(float y){
+        this.yPos=y;
     }
-    private void move() {
-        if (intersectsHorizontalEdge()) {
+
+    public void setVelocity(float x, float y) {
+        xVel += x;
+        yVel += y;
+    }
+
+    public void resetVelocity(){
+        xVel = 0;
+        yVel = 0;
+    }
+
+    protected void move(int rate) {
+        Log.d(TAG, "(" + xPos + ", " + yPos + ")");
+        Log.d(TAG, "intersectsTop: " + intersectsTop());
+        if (intersectsTop()) {
+            yPos = mFrame.getTop() + 1;
             yVel = yVel * (-1);
         }
-        if (intersectsVerticalEdge()) {
+        Log.d(TAG, "intersectsBottom: " + intersectsBottom());
+        if (intersectsBottom()) {
+            yPos = mFrame.getBottom() - (2 * radius + 1);
+            yVel = yVel * (-1);
+        }
+        Log.d(TAG, "intersectsLeft: " + intersectsLeft());
+        if (intersectsLeft()) {
+            xPos = mFrame.getLeft() + 1;
+            xVel = xVel * (-1);
+        }
+        Log.d(TAG, "intersectsRight: " + intersectsRight());
+        if (intersectsRight()) {
+            xPos = mFrame.getRight()-(2 * radius + 1);
             xVel = xVel * (-1);
         }
         if (intersectsPlayer() != null) {
+            /*Player p = intersectsPlayer();
+            double playerCentrumX = p.getX()+p.getRadius();
+            double playerCentrumY = p.getY()+p.getRadius();
+            double centrumX = xPos + radius;
+            double centrumY = yPos + radius;
+
+            Vector radiusVector = new Vector((( p.getRadius()/(p.getRadius()+radius)) * (playerCentrumX - centrumX)),
+                    (( p.getRadius()/(p.getRadius()+radius)) * (playerCentrumY - centrumY)));
+            Log.d(TAG, "radiusVector " + radiusVector);
+            Vector tangentVector = new Vector((-1)*radiusVector.getY(),radiusVector.getX());
+            Log.d(TAG, "tangentVector " + tangentVector);
+            Vector velVector = new Vector(xVel,yVel);
+            Log.d(TAG, "velVector " + velVector);
+
+            double inAngle = Math.acos(dotProduct(tangentVector, velVector) / (length(tangentVector) * length(velVector)));
+            Log.d(TAG, "inAngle " + inAngle);
+
+            double u = Math.asin(tangentVector.getY() / tangentVector.getX());
+            Log.d(TAG, "u " + u);
+
+            double w = (180-inAngle-u);
+            Log.d(TAG, "w " + w);
+
+            float newVelx = (float) Math.sin(w);
+            Log.d(TAG, "newVelx " + newVelx);
+
+            float newVely = (float) Math.sin(180-(w+90));
+            Log.d(TAG, "newVely " + newVely);
+
+            xVel = newVelx;
+            yVel = newVely;
+            Log.d(TAG, "xVel: " + xVel +" yVel: " + yVel);*/
+        }
+
+        /*
             Player p = intersectsPlayer();
             double playerCentrumX = p.getX()+p.getRadius();
             double playerCentrumY = p.getY()+p.getRadius();
@@ -99,19 +148,41 @@ public class Puck extends View {
             float newYVel = (float) (yVel - 2*(Ny * yVel+ Ny * yVel) * Ny);
             xVel = newXVel;
             yVel = newYVel;
-            Log.d(TAG, "Velocoty: x: " + xVel + " y: " + yVel);
-        }
+            Log.d(TAG, "Velocity: x: " + xVel + " y: " + yVel);
+        }*/
 
-        xPos += xVel/REFRESH_RATE;
-        yPos += yVel/REFRESH_RATE;
+        xPos += xVel/rate;
+        yPos += yVel/rate;
 
     }
-
-    private boolean intersectsVerticalEdge() {
-        return (xPos <= mFrame.getLeft() || xPos + 2 * radius >= mFrame.getRight());
+    protected boolean topGoal(){
+        return (((xPos >= ((mFrame.getRight()/2)-100)))&&
+                (xPos+2*radius <= ((mFrame.getRight()/2)+100))&&(yPos <= ((mFrame.getTop()+10))));
     }
-    private boolean intersectsHorizontalEdge() {
-        return (yPos <= mFrame.getTop() || yPos + 2 * radius >= mFrame.getBottom());
+
+    private double dotProduct(Vector a, Vector b) {
+        return (a.getX()*b.getX() + a.getY() * b.getY());
+    }
+    private double length(Vector a) {
+        return Math.sqrt(Math.pow(a.getX(),2)+Math.pow(a.getY(),2));
+    }
+    protected boolean botGoal(){
+        return (((xPos >= ((mFrame.getRight()/2)-100)))&&
+                (xPos+2*radius <= ((mFrame.getRight()/2)+100))&&(yPos+2*radius >= ((mFrame.getBottom()-10))));
+    }
+    private boolean intersectsLeft() {
+        return (xPos <= mFrame.getLeft());
+    }
+    private boolean intersectsRight() {
+        return (xPos + 2 * radius >= mFrame.getRight());
+    }
+
+    private boolean intersectsTop() {
+        return (yPos <= mFrame.getTop() &&!((xPos>=(mFrame.getRight()/2)-100)&&(xPos+2*radius<=(mFrame.getRight()/2)+100)));
+    }
+
+    private boolean intersectsBottom() {
+        return (yPos + 2 * radius >= mFrame.getBottom())&&!((xPos>=(mFrame.getRight()/2)-100)&&(xPos+2*radius<=(mFrame.getRight()/2)+100));
     }
 
     private Player intersectsPlayer() {
@@ -122,6 +193,10 @@ public class Puck extends View {
             }
         }
         return null;
+    }
+    public void deaccelerate() {
+        xVel = xVel * (float) DEACCELATION;
+        yVel = yVel * (float) DEACCELATION;
     }
 
 }

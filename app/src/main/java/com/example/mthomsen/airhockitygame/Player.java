@@ -25,8 +25,8 @@ public class Player extends View {
         super(context);
         this.xPos = x;
         this.yPos = y;
-        this.radius = 64;
-        this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2 * 64, 2 * 64, false);
+        this.radius = 128;
+        this.mScaledBitmap = Bitmap.createScaledBitmap(bitmap,  2 * (int)radius, 2 * (int)radius, false);
     }
 
     @Override
@@ -36,26 +36,35 @@ public class Player extends View {
     }
 
     public boolean intersects(float x, float y) {
-        return (Math.abs(x - (xPos + radius)) < radius && Math.abs(y - (yPos + radius)) < radius);
+        return (Math.abs(x - (xPos + radius)) <= radius && Math.abs(y - (yPos + radius)) <= radius);
     }
     public boolean intersects(Puck puck) {
         return (distanceTo(puck) <= radius+puck.getRadius());
-        /*((xPos - puck.getX()) < radius + puck.getRadius() &&
-                yPos - puck.getY() < radius + puck.getRadius());*/
+
     }
 
 
     public void moveTo(float x, float y) {
         xPos = x - radius;
         yPos = y - radius;
-        invalidate();
+        postInvalidate();
     }
 
     public double getRadius() {
         return radius;
     }
     public double distanceTo(Puck puck) {
-        return (Math.sqrt(Math.pow((puck.getX()+puck.getRadius())- (xPos + radius), 2)+
-                Math.pow((puck.getY()+puck.getRadius())-(yPos+radius),2)));
+        return (Math.sqrt(Math.pow(Math.abs((puck.getX()+puck.getRadius())- (xPos + radius)), 2)+
+                Math.pow(Math.abs((puck.getY()+puck.getRadius())-(yPos+radius)),2)));
     }
+
+    public float getXPos(){
+        return this.xPos;
+    }
+
+    public float getYPos(){
+        return this.yPos;
+    }
+
+
 }
